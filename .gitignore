@@ -1,0 +1,5 @@
+# Python standard ignores
+*.pyc
+__pycache__/
+.env
+*.log
