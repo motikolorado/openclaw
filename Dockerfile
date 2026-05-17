@@ -17,11 +17,13 @@ WORKDIR /app
 RUN npm install -g openclaw mcporter
 
 # Create a directory for persistent data
-RUN mkdir -p /root/.openclaw
+RUN mkdir -p /root/.openclaw && chown -R 1000:1000 /root
 
 # Expose the dashboard port
 EXPOSE 18789
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Start the gateway
-# We use --host 0.0.0.0 so Fly.io can route traffic to it
-# CMD ["openclaw", "gateway", "--port", "18789"]
+# Use entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
