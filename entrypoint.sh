@@ -15,5 +15,8 @@ openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev
 echo "Setting gateway mode..."
 openclaw config set gateway.mode local
 
+echo "Setting gateway token..."
+openclaw config set gateway.auth.token gbagabond
+
 echo "Starting Gateway..."
 exec openclaw gateway
