@@ -1,0 +1,24 @@
+# OpenClaw Fly.io deployment configuration
+# See https://fly.io/docs/reference/configuration/
+
+app = "koloclaw"
+primary_region = "ams" # change to your closest region
+
+[build]
+dockerfile = "Dockerfile"
+
+[http_service]
+internal_port = 18789
+force_https = true
+auto_stop_machines = false # Keep running for persistent connections
+auto_start_machines = true
+min_machines_running = 1
+processes = ["app"]
+
+[[vm]]
+size = "shared-cpu-1x"
+memory = "2048mb"
+
+[mounts]
+source = "openclaw_data"
+destination = "/root/.openclaw"
