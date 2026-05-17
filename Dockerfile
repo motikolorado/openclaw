@@ -24,4 +24,4 @@ EXPOSE 18789
 
 # Start the gateway
 # We use --host 0.0.0.0 so Fly.io can route traffic to it
-CMD ["openclaw", "gateway", "--port", "18789", "--host", "0.0.0.0"]
+CMD ["openclaw", "gateway", "--port", "18789"]
