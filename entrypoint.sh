@@ -10,7 +10,7 @@ chmod -R 755 /root
 
 # Set required config (safe to run every time)
 echo "Setting allowed origin..."
-openclaw config set gateway.controlUi.allowedOrigins '["https://radoclaw.fly.dev"]'
+openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]'
 
 echo "Setting gateway mode..."
 openclaw config set gateway.mode local
