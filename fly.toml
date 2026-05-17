@@ -8,7 +8,7 @@ primary_region = "ams" # change to your closest region
 dockerfile = "Dockerfile"
 
 [processes]
-app = "openclaw gateway"
+app = "openclaw config set gateway.controlUi.allowedOrigins '[`https://radoclaw.fly.dev`]' && openclaw config set gateway.mode local && openclaw gateway"
 
 [http_service]
 internal_port = 18789
