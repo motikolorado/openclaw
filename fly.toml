@@ -7,6 +7,9 @@ primary_region = "ams" # change to your closest region
 [build]
 dockerfile = "Dockerfile"
 
+[processes]
+app = "openclaw gateway"
+
 [http_service]
 internal_port = 18789
 force_https = true
