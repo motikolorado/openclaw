@@ -22,11 +22,8 @@ processes = ["app"]
 size = "shared-cpu-2x"
 memory = "4096mb"
 
-# Mount both OpenClaw config and Ollama models to persistent volumes
+# Single volume for both OpenClaw config and Ollama models
+# Shared CPU instances only support 1 volume
 [[mounts]]
 source = "openclaw_data"
-destination = "/root/.openclaw"
-
-[[mounts]]
-source = "ollama_models"
-destination = "/root/.ollama"
+destination = "/root"

@@ -4,15 +4,15 @@ This setup runs OpenClaw gateway with Ollama (qwen3:72b model) on Fly.io.
 
 ## Setup
 
-### 1. Create Persistent Volumes
+### 1. Create Persistent Volume
 
 ```bash
-# Create volumes for persistent storage
-fly volumes create openclaw_data --size 1 --region ams
-fly volumes create ollama_models --size 100 --region ams
+# Create a single volume for both OpenClaw config and Ollama models
+# Shared CPU instances only support 1 volume
+fly volumes create openclaw_data --size 100 --region ams
 ```
 
-> **Note**: The ollama_models volume needs ~100GB for qwen3:72b model. Adjust size based on your model choice.
+> **Note**: The volume needs ~100GB for qwen3:72b model. Adjust size based on your model choice.
 
 ### 2. Deploy
 
@@ -31,10 +31,9 @@ The first deploy will download the qwen3:72b model (~40-50GB). This can take 10-
 - **Ollama API Port**: 11434
 - **Auth Token**: gbagabond
 
-## Volumes
+## Volume
 
-- `openclaw_data` → `/root/.openclaw` (config, state)
-- `ollama_models` → `/root/.ollama` (downloaded models)
+- `openclaw_data` → `/root` (contains both `.openclaw` and `.ollama` directories)
 
 ## Access
 
