@@ -32,10 +32,18 @@ until curl -s http://127.0.0.1:11434/api/tags > /dev/null 2>&1; do
 done
 echo "Ollama is ready!"
 
+# Give Ollama a moment to fully initialize
+sleep 2
+
 # Debug: Show Ollama status
 echo "Ollama directory contents:"
 ls -la /root/.ollama/ 2>/dev/null || echo "No .ollama directory"
 
+# Debug: Check if we can reach the Ollama API
+echo "Testing Ollama API..."
+curl -s http://127.0.0.1:11434/api/tags | head -c 200
+
+echo ""
 echo "Configuring OpenClaw..."
 
 # Remove old config to ensure clean state
@@ -69,13 +77,34 @@ EOF
 
 echo "Pulling/ensuring powerful model (this may take time on first deploy)..."
 
+# Function to pull model with retry
+pull_model() {
+  local model=$1
+  local max_retries=3
+  local retry=0
+  
+  while [ $retry -lt $max_retries ]; do
+    echo "Attempting to pull $model (attempt $((retry + 1))/$max_retries)..."
+    if ollama pull "$model"; then
+      echo "Successfully pulled $model"
+      return 0
+    else
+      echo "Failed to pull $model, retrying..."
+      retry=$((retry + 1))
+      sleep 5
+    fi
+  done
+  
+  echo "Warning: Failed to pull $model after $max_retries attempts"
+  return 1
+}
+
 # Check if model already exists
 if ollama list 2>/dev/null | grep -q "qwen3:72b"; then
   echo "Model qwen3:72b already downloaded, skipping pull..."
 else
   # Pull the model (will be cached in volume)
-  echo "Pulling qwen3:72b model..."
-  ollama pull qwen3:72b || echo "Warning: Model pull failed, will retry on next startup"
+  pull_model "qwen3:72b" || echo "Warning: Model pull failed, will retry on next startup"
 fi
 
 # Set as primary/default model for all agents
