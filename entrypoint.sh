@@ -21,21 +21,44 @@ echo "Ollama is ready!"
 
 echo "Configuring OpenClaw..."
 
-# Base gateway config
-openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]'
-openclaw config set gateway.mode local
-openclaw config set gateway.auth.token gbagabond
+# Remove old config to ensure clean state
+rm -f /root/.openclaw/openclaw.json
 
-# Ollama provider (OpenAI-compatible endpoint)
-openclaw config set models.providers.ollama.models '["qwen3:72b"]'
-openclaw config set models.providers.ollama.baseUrl 'http://127.0.0.1:11434/v1'
-openclaw config set models.providers.ollama.apiKey 'ollama-local'
-openclaw config set models.providers.ollama.api 'openai-completions'
+# Create the config file directly with proper structure
+# This ensures the models array is properly formatted
+cat > /root/.openclaw/openclaw.json << 'EOF'
+{
+  "gateway": {
+    "controlUi": {
+      "allowedOrigins": ["https://koloclaw.fly.dev"]
+    },
+    "mode": "local",
+    "auth": {
+      "token": "gbagabond"
+    }
+  },
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "apiKey": "ollama-local",
+        "api": "openai-completions",
+        "models": ["qwen3:72b"]
+      }
+    }
+  }
+}
+EOF
 
 echo "Pulling/ensuring powerful model (this may take time on first deploy)..."
 
-# Pull the model (will be cached in volume)
-ollama pull qwen3:72b
+# Check if model already exists
+if ollama list | grep -q "qwen3:72b"; then
+  echo "Model qwen3:72b already downloaded, skipping pull..."
+else
+  # Pull the model (will be cached in volume)
+  ollama pull qwen3:72b
+fi
 
 # Set as primary/default model for all agents
 openclaw models set ollama/qwen3:72b
