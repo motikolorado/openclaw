@@ -1,12 +1,25 @@
 #!/bin/sh
-set -e
 
 echo "=== OpenClaw + Powerful Local Ollama on GPU ==="
 
 # Permissions & dirs
 mkdir -p /root/.openclaw /root/.ollama
-chown -R 1000:1000 /root 2>/dev/null || true
-chmod -R 755 /root
+
+# Ensure proper ownership for Ollama (runs as root in container)
+# Ollama needs write access to /root/.ollama
+chmod -R 755 /root/.ollama 2>/dev/null || true
+
+# Initialize Ollama directory structure if needed
+# This ensures the models directory exists
+if [ ! -d "/root/.ollama/models" ]; then
+  echo "Initializing Ollama directory structure..."
+  mkdir -p /root/.ollama/models
+fi
+
+# Set Ollama environment to use the correct directory
+export OLLAMA_MODELS=/root/.ollama/models
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
 
 echo "Starting Ollama server..."
 ollama serve &
@@ -18,6 +31,10 @@ until curl -s http://127.0.0.1:11434/api/tags > /dev/null 2>&1; do
   sleep 1
 done
 echo "Ollama is ready!"
+
+# Debug: Show Ollama status
+echo "Ollama directory contents:"
+ls -la /root/.ollama/ 2>/dev/null || echo "No .ollama directory"
 
 echo "Configuring OpenClaw..."
 
@@ -53,11 +70,12 @@ EOF
 echo "Pulling/ensuring powerful model (this may take time on first deploy)..."
 
 # Check if model already exists
-if ollama list | grep -q "qwen3:72b"; then
+if ollama list 2>/dev/null | grep -q "qwen3:72b"; then
   echo "Model qwen3:72b already downloaded, skipping pull..."
 else
   # Pull the model (will be cached in volume)
-  ollama pull qwen3:72b
+  echo "Pulling qwen3:72b model..."
+  ollama pull qwen3:72b || echo "Warning: Model pull failed, will retry on next startup"
 fi
 
 # Set as primary/default model for all agents
