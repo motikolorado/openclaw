@@ -1,6 +1,3 @@
-FROM ollama/ollama:latest AS ollama-base
-
-# Final image with Node + OpenClaw
 FROM ollama/ollama:latest
 
 # Install Node 22 + build deps
@@ -24,5 +21,5 @@ RUN mkdir -p /root/.openclaw /root/.ollama
 
 EXPOSE 18789 11434
 
-# Start both services (Ollama in background)
-ENTRYPOINT ["sh", "-c", "ollama serve & /entrypoint.sh"]
+# Start the entrypoint (which handles both ollama and openclaw)
+ENTRYPOINT ["/entrypoint.sh"]

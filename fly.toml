@@ -8,7 +8,7 @@ primary_region = "ams" # change to your closest region
 dockerfile = "Dockerfile"
 
 [processes]
-  app = "sh -c 'chmod +x /entrypoint.sh && /entrypoint.sh'"
+  app = "/entrypoint.sh"
 
 [http_service]
 internal_port = 18789
@@ -22,6 +22,11 @@ processes = ["app"]
 size = "shared-cpu-2x"
 memory = "4096mb"
 
-[mounts]
+# Mount both OpenClaw config and Ollama models to persistent volumes
+[[mounts]]
 source = "openclaw_data"
 destination = "/root/.openclaw"
+
+[[mounts]]
+source = "ollama_models"
+destination = "/root/.ollama"
