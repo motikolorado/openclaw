@@ -43,8 +43,8 @@ ls -la /root/.ollama/ 2>/dev/null || echo "No .ollama directory"
 echo "Testing Ollama API..."
 curl -s http://127.0.0.1:11434/api/tags | head -c 200
 
-echo "Running ollama launch openclaw --model qwen3.5"
-exec ollama launch openclaw --model qwen3.5 --yes
+echo "Running ollama launch openclaw --model qwen3.5:122b --yes"
+exec ollama launch openclaw --model qwen3.5:122b --yes
 # echo "Configuring OpenClaw..."
 
 # # Remove old config to ensure clean state
