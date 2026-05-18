@@ -27,10 +27,10 @@ openclaw config set gateway.mode local
 openclaw config set gateway.auth.token gbagabond
 
 # Ollama provider (OpenAI-compatible endpoint)
+openclaw config set models.providers.ollama.models '["qwen3:72b"]'
 openclaw config set models.providers.ollama.baseUrl 'http://127.0.0.1:11434/v1'
 openclaw config set models.providers.ollama.apiKey 'ollama-local'
 openclaw config set models.providers.ollama.api 'openai-completions'
-openclaw config set models.providers.ollama.models '["qwen3:72b"]'
 
 echo "Pulling/ensuring powerful model (this may take time on first deploy)..."
 
