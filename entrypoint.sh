@@ -68,7 +68,7 @@ cat > /root/.openclaw/openclaw.json << 'EOF'
         "baseUrl": "http://127.0.0.1:11434/v1",
         "apiKey": "ollama-local",
         "api": "openai-completions",
-        "models": ["qwen3:72b"]
+        "models": [{"id": "qwen3:32b"}]
       }
     }
   }
@@ -100,17 +100,17 @@ pull_model() {
 }
 
 # Check if model already exists
-if ollama list 2>/dev/null | grep -q "qwen3:72b"; then
-  echo "Model qwen3:72b already downloaded, skipping pull..."
+if ollama list 2>/dev/null | grep -q "qwen3:32b"; then
+  echo "Model qwen3:32b already downloaded, skipping pull..."
 else
   # Pull the model (will be cached in volume)
-  pull_model "qwen3:72b" || echo "Warning: Model pull failed, will retry on next startup"
+  pull_model "qwen3:32b" || echo "Warning: Model pull failed, will retry on next startup"
 fi
 
 # Set as primary/default model for all agents
-openclaw models set ollama/qwen3:72b
+openclaw models set ollama/qwen3:32b
 
-echo "✅ Powerful local model (qwen3:72b) set as default!"
+echo "✅ Powerful local model (qwen3:32b) set as default!"
 echo "Starting Gateway..."
 
 exec openclaw gateway
