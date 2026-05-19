@@ -43,30 +43,30 @@ ls -la /root/.ollama/ 2>/dev/null || echo "No .ollama directory"
 echo "Testing Ollama API..."
 curl -s http://127.0.0.1:11434/api/tags | head -c 200
 
-echo "Configuring OpenClaw..."
+# echo "Configuring OpenClaw..."
 
-# Remove old config to ensure clean state
-rm -f /root/.openclaw/openclaw.json
+# # Remove old config to ensure clean state
+# rm -f /root/.openclaw/openclaw.json
 
-# Create the config file directly with proper structure
-# This ensures the models array is properly formatted
-cat > /root/.openclaw/openclaw.json << 'EOF'
-{
-  "gateway": {
-    "controlUi": {
-      "allowedOrigins": ["https://koloclaw.fly.dev"]
-    },
-    "mode": "local",
-    "auth": {
-      "token": "gbagabond"
-    }
-  }
-}
-EOF
+# # Create the config file directly with proper structure
+# # This ensures the models array is properly formatted
+# cat > /root/.openclaw/openclaw.json << 'EOF'
+# {
+#   "gateway": {
+#     "controlUi": {
+#       "allowedOrigins": ["https://koloclaw.fly.dev"]
+#     },
+#     "mode": "local",
+#     "auth": {
+#       "token": "gbagabond"
+#     }
+#   }
+# }
+# EOF
 
-echo "Starting Gateway..."
-openclaw gateway --port 28789 --bind lan
-# Give openclaw a moment to fully initialize
-sleep 3
+# echo "Starting Gateway..."
+# openclaw gateway --port 28789 --bind lan
+# # Give openclaw a moment to fully initialize
+# sleep 3
 echo "Running ollama launch openclaw --model qwen3.5:latest"
 exec ollama launch openclaw --model qwen3.5:latest --yes

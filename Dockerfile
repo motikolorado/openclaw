@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Install OpenClaw globally
-RUN npm install -g openclaw mcporter
+# RUN npm install -g openclaw mcporter
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
@@ -19,7 +19,7 @@ RUN chmod +x /entrypoint.sh
 # Create data dirs
 RUN mkdir -p /root/.openclaw /root/.ollama
 
-EXPOSE 18789 11434
+EXPOSE 18789 11434 3000
 
 # Start the entrypoint (which handles both ollama and openclaw)
 ENTRYPOINT ["/entrypoint.sh"]
