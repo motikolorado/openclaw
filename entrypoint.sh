@@ -60,22 +60,6 @@ cat > /root/.openclaw/openclaw.json << 'EOF'
     "auth": {
       "token": "gbagabond"
     }
-  },
-  "tools": {
-    "web": {
-      "search": {"enabled": true},
-      "fetch": {"enabled": true}
-    }
-  },
-  "models": {
-    "providers": {
-      "ollama": {
-        "baseUrl": "http://127.0.0.1:11434/v1",
-        "apiKey": "ollama-local",
-        "api": "openai-completions",
-        "models": [{"id": "qwen3.5:122b", "name":"qwen3.5:122b","model":"qwen3.5:122b"}]
-      }
-    }
   }
 }
 EOF
