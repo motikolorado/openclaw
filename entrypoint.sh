@@ -26,38 +26,38 @@ done
 echo "Ollama is ready!"
 
 echo "Launching OpenClaw (install + start)..."
-ollama launch openclaw --model qwen3.5:latest --yes &
+ollama launch openclaw --model qwen3.5:latest --yes
 
-LAUNCH_PID=$!
+# LAUNCH_PID=$!
 
-# === Smart wait: Poll until openclaw CLI is available ===
-echo "Waiting for OpenClaw installation to complete..."
-for i in $(seq 1 60); do
-  if command -v openclaw >/dev/null 2>&1; then
-    echo "OpenClaw CLI is now available!"
-    break
-  fi
-  sleep 2
-done
+# # === Smart wait: Poll until openclaw CLI is available ===
+# echo "Waiting for OpenClaw installation to complete..."
+# for i in $(seq 1 60); do
+#   if command -v openclaw >/dev/null 2>&1; then
+#     echo "OpenClaw CLI is now available!"
+#     break
+#   fi
+#   sleep 2
+# done
 
-# Extra safety check - wait until config file or gateway command works
-if ! command -v openclaw >/dev/null 2>&1; then
-  echo "ERROR: OpenClaw did not install properly"
-  exit 1
-fi
+# # Extra safety check - wait until config file or gateway command works
+# if ! command -v openclaw >/dev/null 2>&1; then
+#   echo "ERROR: OpenClaw did not install properly"
+#   exit 1
+# fi
 
-echo "Applying configuration..."
-openclaw config set gateway.binding "lan"
-openclaw config set gateway.mode "local"
-openclaw config set gateway.auth.token "gbagabond"
-openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]'
+# echo "Applying configuration..."
+# openclaw config set gateway.binding "lan"
+# openclaw config set gateway.mode "local"
+# openclaw config set gateway.auth.token "gbagabond"
+# openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]'
 
-echo "Current gateway config:"
-openclaw config get gateway
+# echo "Current gateway config:"
+# openclaw config get gateway
 
-echo "Stopping current instance cleanly..."
-openclaw gateway stop || true
-sleep 2
+# echo "Stopping current instance cleanly..."
+# openclaw gateway stop || true
+# sleep 2
 
-echo "Re-launching OpenClaw with final settings..."
-exec ollama launch openclaw --model qwen3.5:latest --yes
+# echo "Re-launching OpenClaw with final settings..."
+# exec ollama launch openclaw --model qwen3.5:latest --yes
