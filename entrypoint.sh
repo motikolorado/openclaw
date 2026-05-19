@@ -2,7 +2,7 @@
 
 echo "=== OpenClaw + Powerful Local Ollama on GPU ==="
 
-# Setup directories
+# Directories & permissions
 mkdir -p /root/.openclaw /root/.ollama
 chmod -R 755 /root/.ollama 2>/dev/null || true
 
@@ -25,22 +25,22 @@ until curl -s http://127.0.0.1:11434/api/tags >/dev/null 2>&1; do
 done
 echo "Ollama is ready!"
 
-# === Configure OpenClaw + set default model WITHOUT starting gateway ===
-echo "Configuring OpenClaw and setting qwen3.5 as default model..."
-ollama launch openclaw --model qwen3.5:latest --config --yes
+# 1. Launch with Ollama (install + configure model)
+echo "Installing/configuring OpenClaw and setting default model..."
+ollama launch openclaw --model qwen3.5:latest --yes
 
-# Wait for OpenClaw CLI to be ready (smart polling)
+# 2. Wait for CLI to be available
 echo "Waiting for OpenClaw CLI..."
 for i in $(seq 1 40); do
   if command -v openclaw >/dev/null 2>&1; then
-    echo "OpenClaw CLI ready!"
+    echo "OpenClaw CLI is ready!"
     break
   fi
   sleep 1.5
 done
 
-# Extra safety: apply config via CLI (in case --config didn't fully set it)
-echo "Applying additional gateway settings..."
+# 3. Apply your custom config
+echo "Applying gateway configuration..."
 openclaw config set gateway.binding "lan" || true
 openclaw config set gateway.mode "local" || true
 openclaw config set gateway.auth.token "gbagabond" || true
@@ -49,5 +49,6 @@ openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev
 echo "Current default model:"
 openclaw config get agents.defaults.model.primary || echo "Not set"
 
-echo "Starting OpenClaw Gateway manually..."
-exec openclaw gateway --port 18789 --bind lan
+# 4. Restart gateway with your desired port + bind
+echo "Restarting gateway on port 18789 bound to LAN..."
+exec openclaw gateway restart --port 18789 --bind lan
