@@ -20,7 +20,7 @@ processes = ["app"]
 
 [[vm]]
 size = "shared-cpu-2x"
-memory = "4096mb"
+memory = "8192mb"
 
 # Single volume for both OpenClaw config and Ollama models
 # Shared CPU instances only support 1 volume
