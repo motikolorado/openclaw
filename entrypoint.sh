@@ -52,4 +52,4 @@ openclaw config get agents.defaults.model.primary || echo "Not set"
 # 4. Restart gateway with your desired port + bind
 echo "Restarting gateway on port 18789 bound to LAN..."
 openclaw gateway stop
-exec openclaw gateway restart --port 18789 --bind lan
+openclaw gateway restart --port 18789 --bind lan
