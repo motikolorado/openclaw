@@ -66,4 +66,4 @@ EOF
 
 echo "Starting Gateway..."
 echo "Running ollama launch openclaw --model qwen3.5:latest --yes"
-exec ollama launch openclaw --model qwen3.5:latest --yes --gateway-port 28789
+exec ollama launch openclaw --model qwen3.5:latest --yes --gateway-port 28789 --bind lan
