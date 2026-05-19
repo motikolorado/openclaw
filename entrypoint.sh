@@ -65,5 +65,6 @@ cat > /root/.openclaw/openclaw.json << 'EOF'
 EOF
 
 echo "Starting Gateway..."
-echo "Running ollama launch openclaw --model qwen3.5:latest --yes"
-exec ollama launch openclaw --model qwen3.5:latest --yes --gateway-port 28789 --bind lan
+echo "Running ollama launch openclaw --model qwen3.5:latest"
+openclaw gateway --port 28789 --bind lan
+exec ollama launch openclaw --model qwen3.5:latest --yes
