@@ -63,9 +63,7 @@ cat > /root/.openclaw/openclaw.json << 'EOF'
   }
 }
 EOF
-openclaw config set gateway.port 28789
-openclaw config set update.auto.enabled false
 
 echo "Starting Gateway..."
 echo "Running ollama launch openclaw --model qwen3.5:latest --yes"
-exec ollama launch openclaw --model qwen3.5:latest --yes
+exec ollama launch openclaw --model qwen3.5:latest --yes --gateway-port 28789
