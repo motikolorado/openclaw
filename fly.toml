@@ -1,8 +1,8 @@
 # OpenClaw Fly.io deployment configuration
 # See https://fly.io/docs/reference/configuration/
 
-app = "koloclaw"
-primary_region = "ams" # change to your closest region
+app = "radoclaw"
+primary_region = "ord"
 
 [build]
 dockerfile = "Dockerfile"
@@ -13,14 +13,15 @@ dockerfile = "Dockerfile"
 [http_service]
 internal_port = 18789
 force_https = true
-auto_stop_machines = false # Keep running for persistent connections
-auto_start_machines = true
+auto_stop_machines = false
+auto_start_machines = false
 min_machines_running = 1
 processes = ["app"]
 
+# ── Machine sizing ───────────────────────────────────────────────────────────
 [[vm]]
-size = "shared-cpu-2x"
-memory = "8192mb"
+  size   = "performance-2x"    # 2 shared vCPUs
+  memory = "16gb"              # 8 192 MB RAM
 
 # Single volume for both OpenClaw config and Ollama models
 # Shared CPU instances only support 1 volume

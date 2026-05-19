@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Install OpenClaw globally
-RUN npm install -g openclaw mcporter
+RUN npm install -g openclaw@latest mcporter
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh

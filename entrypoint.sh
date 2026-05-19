@@ -26,4 +26,5 @@ done
 echo "Ollama is ready!"
 
 echo "Starting openclaw gateway..."
+ollama launch openclaw --model qwen3.5:latest --config
 exec openclaw gateway --port 18789 --bind lan
