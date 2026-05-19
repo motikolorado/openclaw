@@ -43,82 +43,43 @@ ls -la /root/.ollama/ 2>/dev/null || echo "No .ollama directory"
 echo "Testing Ollama API..."
 curl -s http://127.0.0.1:11434/api/tags | head -c 200
 
+echo "Configuring OpenClaw..."
+
+# Remove old config to ensure clean state
+rm -f /root/.openclaw/openclaw.json
+
+# Create the config file directly with proper structure
+# This ensures the models array is properly formatted
+cat > /root/.openclaw/openclaw.json << 'EOF'
+{
+  "gateway": {
+    "controlUi": {
+      "allowedOrigins": ["https://koloclaw.fly.dev"]
+    },
+    "mode": "local",
+    "auth": {
+      "token": "gbagabond"
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {"enabled": true},
+      "fetch": {"enabled": true}
+    }
+  },
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "apiKey": "ollama-local",
+        "api": "openai-completions",
+        "models": [{"id": "qwen3.5:122b", "name":"qwen3.5:122b","model":"qwen3.5:122b"}]
+      }
+    }
+  }
+}
+EOF
+
+echo "Starting Gateway..."
 echo "Running ollama launch openclaw --model qwen3.5:122b --yes"
-openclaw config set gateway.port 28789
 exec ollama launch openclaw --model qwen3.5:122b --yes
-# echo "Configuring OpenClaw..."
-
-# # Remove old config to ensure clean state
-# rm -f /root/.openclaw/openclaw.json
-
-# # Create the config file directly with proper structure
-# # This ensures the models array is properly formatted
-# cat > /root/.openclaw/openclaw.json << 'EOF'
-# {
-#   "gateway": {
-#     "controlUi": {
-#       "allowedOrigins": ["https://koloclaw.fly.dev"]
-#     },
-#     "mode": "local",
-#     "auth": {
-#       "token": "gbagabond"
-#     }
-#   },
-#   "tools": {
-#     "web": {
-#       "search": {"enabled": true},
-#       "fetch": {"enabled": true}
-#     }
-#   },
-#   "models": {
-#     "providers": {
-#       "ollama": {
-#         "baseUrl": "http://127.0.0.1:11434/v1",
-#         "apiKey": "ollama-local",
-#         "api": "openai-completions",
-#         "models": [{"id": "qwen3:32b", "contextWindow": 65536}]
-#       }
-#     }
-#   }
-# }
-# EOF
-
-# echo "Pulling/ensuring powerful model (this may take time on first deploy)..."
-
-# # Function to pull model with retry
-# pull_model() {
-#   local model=$1
-#   local max_retries=3
-#   local retry=0
-  
-#   while [ $retry -lt $max_retries ]; do
-#     echo "Attempting to pull $model (attempt $((retry + 1))/$max_retries)..."
-#     if ollama pull "$model"; then
-#       echo "Successfully pulled $model"
-#       return 0
-#     else
-#       echo "Failed to pull $model, retrying..."
-#       retry=$((retry + 1))
-#       sleep 5
-#     fi
-#   done
-  
-#   echo "Warning: Failed to pull $model after $max_retries attempts"
-#   return 1
-# }
-
-# # Check if model already exists
-# if ollama list 2>/dev/null | grep -q "qwen3:32b"; then
-#   echo "Model qwen3:32b already downloaded, skipping pull..."
-# else
-#   # Pull the model (will be cached in volume)
-#   pull_model "qwen3:32b" || echo "Warning: Model pull failed, will retry on next startup"
-# fi
-
-# # Set as primary/default model for all agents
-# openclaw models set ollama/qwen3:32b
-
-# echo "✅ Powerful local model (qwen3:32b) set as default!"
-# echo "Starting Gateway..."
-
-# exec openclaw gateway
