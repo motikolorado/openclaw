@@ -44,6 +44,7 @@ echo "Testing Ollama API..."
 curl -s http://127.0.0.1:11434/api/tags | head -c 200
 
 echo "Running ollama launch openclaw --model qwen3.5:122b --yes"
+openclaw config set gateway.port 28789
 exec ollama launch openclaw --model qwen3.5:122b --yes
 # echo "Configuring OpenClaw..."
 
