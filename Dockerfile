@@ -19,7 +19,7 @@ RUN chmod +x /entrypoint.sh
 # Create data dirs
 RUN mkdir -p /root/.openclaw /root/.ollama
 
-EXPOSE 18789 11434 3000
+EXPOSE 18789 11434
 
 # Start the entrypoint (which handles both ollama and openclaw)
 ENTRYPOINT ["/entrypoint.sh"]
