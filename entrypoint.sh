@@ -18,46 +18,36 @@ echo "Starting Ollama server..."
 ollama serve &
 OLLAMA_PID=$!
 
-# Wait for Ollama (this one is necessary)
+# Wait for Ollama
 echo "Waiting for Ollama..."
 until curl -s http://127.0.0.1:11434/api/tags >/dev/null 2>&1; do
   sleep 1
 done
 echo "Ollama is ready!"
 
-echo "Launching OpenClaw (install + start)..."
-ollama launch openclaw --model qwen3.5:latest --yes
+# === Configure OpenClaw + set default model WITHOUT starting gateway ===
+echo "Configuring OpenClaw and setting qwen3.5 as default model..."
+ollama launch openclaw --model qwen3.5:latest --config --yes
 
-# LAUNCH_PID=$!
+# Wait for OpenClaw CLI to be ready (smart polling)
+echo "Waiting for OpenClaw CLI..."
+for i in $(seq 1 40); do
+  if command -v openclaw >/dev/null 2>&1; then
+    echo "OpenClaw CLI ready!"
+    break
+  fi
+  sleep 1.5
+done
 
-# # === Smart wait: Poll until openclaw CLI is available ===
-# echo "Waiting for OpenClaw installation to complete..."
-# for i in $(seq 1 60); do
-#   if command -v openclaw >/dev/null 2>&1; then
-#     echo "OpenClaw CLI is now available!"
-#     break
-#   fi
-#   sleep 2
-# done
+# Extra safety: apply config via CLI (in case --config didn't fully set it)
+echo "Applying additional gateway settings..."
+openclaw config set gateway.binding "lan" || true
+openclaw config set gateway.mode "local" || true
+openclaw config set gateway.auth.token "gbagabond" || true
+openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]' || true
 
-# # Extra safety check - wait until config file or gateway command works
-# if ! command -v openclaw >/dev/null 2>&1; then
-#   echo "ERROR: OpenClaw did not install properly"
-#   exit 1
-# fi
+echo "Current default model:"
+openclaw config get agents.defaults.model.primary || echo "Not set"
 
-# echo "Applying configuration..."
-# openclaw config set gateway.binding "lan"
-# openclaw config set gateway.mode "local"
-# openclaw config set gateway.auth.token "gbagabond"
-# openclaw config set gateway.controlUi.allowedOrigins '["https://koloclaw.fly.dev"]'
-
-# echo "Current gateway config:"
-# openclaw config get gateway
-
-# echo "Stopping current instance cleanly..."
-# openclaw gateway stop || true
-# sleep 2
-
-# echo "Re-launching OpenClaw with final settings..."
-# exec ollama launch openclaw --model qwen3.5:latest --yes
+echo "Starting OpenClaw Gateway manually..."
+exec openclaw gateway --port 18789 --bind lan
