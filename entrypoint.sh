@@ -13,6 +13,8 @@ fi
 export OLLAMA_MODELS=/root/.ollama/models
 export OLLAMA_HOST=0.0.0.0:11434
 export OLLAMA_ORIGINS="*"
+export OLLAMA_NUM_CTX=131072
+export OLLAMA_CONTEXT_LENGTH=131072
 
 echo "Starting Ollama server..."
 ollama serve &
@@ -26,5 +28,8 @@ done
 echo "Ollama is ready!"
 
 echo "Starting openclaw gateway..."
-ollama launch openclaw --model qwen3.5:latest --yes
-# exec openclaw gateway --port 18789 --bind lan
+# Run this only on first boot to auto-config openclaw for ollama 
+# ollama launch openclaw --model qwen3.5:latest --yes
+
+# Run this after first boot to launch openclaw and bind it to fly.dev
+exec openclaw gateway --port 18789 --bind lan

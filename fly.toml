@@ -14,9 +14,15 @@ dockerfile = "Dockerfile"
 internal_port = 18789
 force_https = true
 auto_stop_machines = false
-auto_start_machines = false
+auto_start_machines = true
 min_machines_running = 1
 processes = ["app"]
+
+  # Fly edge → machine connection
+  [http_service.concurrency]
+    type       = "requests"
+    soft_limit = 10
+    hard_limit = 20
 
 # ── Machine sizing ───────────────────────────────────────────────────────────
 [[vm]]
@@ -28,3 +34,20 @@ processes = ["app"]
 [[mounts]]
 source = "openclaw_data"
 destination = "/root"
+
+
+# ── Health check (used by Fly to decide when the machine is ready) ────────────
+[checks]
+  [checks.ollama_ready]
+    grace_period = "60s"    # give first-boot model pull time
+    interval     = "20s"
+    timeout      = "10s"
+    type         = "http"
+    port         = 18789
+    path         = "/"
+    method       = "GET"
+
+# ── Deployment strategy ───────────────────────────────────────────────────────
+[deploy]
+  strategy         = "immediate"   # don't wait for a second machine to be healthy
+  release_command  = ""
