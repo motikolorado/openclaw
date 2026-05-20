@@ -15,6 +15,8 @@ export OLLAMA_HOST=0.0.0.0:11434
 export OLLAMA_ORIGINS="*"
 export OLLAMA_NUM_CTX=131072
 export OLLAMA_CONTEXT_LENGTH=131072
+export OLLAMA_KEEP_ALIVE=30m
+export OLLAMA_NUM_PARALLEL=1
 
 echo "Starting Ollama server..."
 ollama serve &

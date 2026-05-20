@@ -1,8 +1,11 @@
 {
   "agents": {
     "defaults": {
+      "bootstrapMaxChars": 50000,
+      "bootstrapTotalMaxChars": 300000,
+      "contextInjection": "always",
       "model": {
-        "primary": "ollama/qwen3.5:latest"
+        "primary": "ollama/qwen2.5-coder:3b"
       },
       "workspace": "/root/.openclaw/workspace"
     }
@@ -13,52 +16,48 @@
       "token": "cba71247e14bd714f8b86838ab1a355651417fb819d7e3ec"
     },
     "bind": "loopback",
+    "controlUi": {
+      "allowedOrigins": ["https://radoclaw.fly.dev"]
+    },
     "mode": "local",
     "port": 18789,
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
-    },
-    "controlUi": {
-      "allowedOrigins": ["https://radoclaw.fly.dev"]
     }
   },
   "meta": {
-    "lastTouchedAt": "2026-05-19T21:30:57.482Z",
+    "lastTouchedAt": "2026-05-20T06:28:06.943Z",
     "lastTouchedVersion": "2026.5.18"
   },
   "models": {
     "mode": "merge",
     "providers": {
       "ollama": {
-        "api": "openai-completions",
-        "injectNumCtxForOpenAICompat": true,
-        "apiKey": "OLLAMA_API_KEY",
+        "api": "ollama",
+        "apiKey": "ollama-local",
         "baseUrl": "http://0.0.0.0:11434",
+        "contextWindow": 131072,
+        "injectNumCtxForOpenAICompat": true,
         "models": [
           {
-            "compat": {
-              "supportsUsageInStreaming": true
-            },
-            "contextWindow": 128000,
+            "contextWindow": 32768,
             "cost": {
               "cacheRead": 0,
               "cacheWrite": 0,
               "input": 0,
               "output": 0
             },
-            "id": "gemma4",
+            "id": "qwen2.5-coder:3b",
             "input": ["text"],
-            "maxTokens": 8192,
-            "name": "gemma4",
-            "reasoning": false
+            "name": "qwen2.5-coder:3b"
           },
           {
             "compat": {
               "supportsTools": true,
               "supportsUsageInStreaming": true
             },
-            "contextWindow": 131072,
+            "contextWindow": 262144,
             "cost": {
               "cacheRead": 0,
               "cacheWrite": 0,
@@ -69,10 +68,10 @@
             "input": ["text", "image"],
             "maxTokens": 65536,
             "name": "qwen3.5:latest",
-            "reasoning": true,
             "params": {
               "num_ctx": 131072
-            }
+            },
+            "reasoning": true
           }
         ]
       }
@@ -222,7 +221,7 @@
     }
   },
   "tools": {
-    "profile": "coding",
+    "profile": "full",
     "web": {
       "search": {
         "enabled": true,
